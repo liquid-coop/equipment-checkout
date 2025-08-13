@@ -134,6 +134,43 @@
             border-color: #4f46e5;
             color: white;
         }
+        #location-selector .sub-nav-btn.active {
+            background-color: #14b8a6; /* teal-500 */
+            border-color: #14b8a6; /* teal-500 */
+            color: white;
+        }
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #374151; /* gray-700 */
+            border: 1px solid #374151;
+        }
+        .calendar-day {
+            min-height: 120px;
+            padding: 8px;
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db;
+        }
+        .calendar-day.other-month {
+            background-color: #111827; /* gray-900 */
+            color: #4b5563; /* gray-600 */
+        }
+        .calendar-day-header {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 lg:p-8">
@@ -377,7 +414,15 @@
             </div>
             
             <div id="calendar-view" class="view card p-6">
-                 <h2 class="text-xl font-semibold">Reservation Calendar (Coming Soon)</h2>
+                 <div class="flex justify-between items-center mb-4">
+                     <button id="prev-month-btn" class="btn btn-secondary">&lt;</button>
+                     <h2 id="calendar-month-year" class="text-xl font-semibold"></h2>
+                     <button id="next-month-btn" class="btn btn-secondary">&gt;</button>
+                 </div>
+                 <div class="grid grid-cols-7 text-center font-semibold text-gray-400 mb-1">
+                     <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                 </div>
+                 <div id="calendar-grid" class="calendar-grid"></div>
             </div>
             <div id="admin-view" class="view card p-6">
                  <h2 class="text-xl font-semibold">Admin Panel (Coming Soon)</h2>
@@ -481,6 +526,7 @@
         let currentCheckinItems = [];
         let reservationMode = 'new'; // 'new' or 'update'
         let selectedReservationBatchId = null;
+        let calendarDate = new Date();
 
         // --- UTILITY FUNCTIONS ---
         const getTodayDateString = () => {
@@ -1083,6 +1129,8 @@
                 resetCheckoutForm();
             } else if (viewName === 'reserve') {
                 resetReservationForm();
+            } else if (viewName === 'calendar') {
+                renderCalendar(calendarDate);
             }
         };
 
@@ -1131,9 +1179,9 @@
             document.querySelector('#checkin-view h2').textContent = `Check-in ${type}`;
             
             // Reset everything and re-render
-            resetCheckoutForm();
-            resetCheckinForm();
-            resetReservationForm();
+            const currentViewButton = document.querySelector('#main-nav .nav-btn.active');
+            const currentView = currentViewButton ? currentViewButton.dataset.view : 'reserve';
+            switchView(currentView); // This will also call the appropriate reset function
             populateUserDropdowns();
             populateCategoryFilter('categoryFilter');
             populateCategoryFilter('checkoutCategoryFilter');
@@ -1166,6 +1214,64 @@
             if (selectedCheckinUser) {
                 const selectedCategory = document.getElementById('checkinCategoryFilter').value;
                 populateCheckinEquipmentDropdown(selectedCheckinUser, selectedCategory);
+            }
+        };
+
+        const renderCalendar = (date) => {
+            const monthYearEl = document.getElementById('calendar-month-year');
+            const gridEl = document.getElementById('calendar-grid');
+            gridEl.innerHTML = '';
+            
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            
+            monthYearEl.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Add blank days for the start of the month
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                gridEl.innerHTML += `<div class="calendar-day other-month"></div>`;
+            }
+
+            // Add days of the month
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.innerHTML = `<div class="calendar-day-header">${i}</div>`;
+                
+                const currentDate = new Date(year, month, i);
+
+                // Find events for this day
+                currentData.reservations.forEach(res => {
+                    const startDate = new Date(res.startDate + 'T00:00:00');
+                    const endDate = new Date(res.endDate + 'T00:00:00');
+                    if (currentDate >= startDate && currentDate <= endDate) {
+                        const item = currentData.inventory.find(inv => inv.id === res.equipmentId);
+                        const eventEl = document.createElement('div');
+                        eventEl.className = 'calendar-event status-reserved';
+                        eventEl.textContent = `${item.name} (${res.name})`;
+                        dayEl.appendChild(eventEl);
+                    }
+                });
+
+                currentData.checkoutLog.forEach(log => {
+                    if (log.dateReturned === '') {
+                        const startDate = new Date(log.dateOut + 'T00:00:00');
+                        const endDate = new Date(log.dueDate + 'T00:00:00');
+                         if (currentDate >= startDate && currentDate <= endDate) {
+                            const item = currentData.inventory.find(inv => inv.id === log.equipmentId);
+                            const eventEl = document.createElement('div');
+                            const isOverdue = new Date(log.dueDate + 'T00:00:00') < new Date(getTodayDateString() + 'T00:00:00');
+                            eventEl.className = `calendar-event ${isOverdue ? 'status-overdue' : 'status-checked-out'}`;
+                            eventEl.textContent = `${item.name} (${log.name})`;
+                            dayEl.appendChild(eventEl);
+                        }
+                    }
+                });
+
+                gridEl.appendChild(dayEl);
             }
         };
 
@@ -1310,6 +1416,16 @@
                 btn.addEventListener('click', () => setActiveDatabase(currentLocation, btn.dataset.type));
             });
             
+            // Calendar Navigation
+            document.getElementById('prev-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                renderCalendar(calendarDate);
+            });
+            document.getElementById('next-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                renderCalendar(calendarDate);
+            });
+
             // Initial Setup
             setActiveDatabase('LA', 'Equipment');
             switchView('reserve');
