@@ -30,11 +30,16 @@
             cursor: pointer;
             border: 1px solid transparent;
         }
+        .btn:disabled {
+            background-color: #374151;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
         .btn-primary {
             background-color: #4f46e5;
             color: white;
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background-color: #4338ca;
         }
         .btn-secondary {
@@ -42,8 +47,15 @@
             color: #d1d5db; /* gray-300 */
             border-color: #4b5563; /* gray-600 */
         }
-        .btn-secondary:hover {
+        .btn-secondary:hover:not(:disabled) {
             background-color: #4b5563; /* gray-600 */
+        }
+        .btn-danger {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+        }
+        .btn-danger:hover:not(:disabled) {
+            background-color: #dc2626; /* red-600 */
         }
         .input-field {
             background-color: #374151; /* gray-700 */
@@ -58,6 +70,10 @@
             outline-offset: 2px;
             border-color: #4f46e5;
             box-shadow: 0 0 0 2px #4f46e5;
+        }
+        .input-field:disabled {
+            background-color: #1f2937;
+            cursor: not-allowed;
         }
         .nav-btn {
             background-color: #1f2937; /* gray-800 */
@@ -123,48 +139,58 @@
 <body class="p-4 sm:p-6 lg:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold">Equipment Checkout System</h1>
+        <header class="mb-8 flex items-center justify-between">
+            <img src="https://raw.githubusercontent.com/liquid-coop/equipment-checkout/main/Horizontal-Mono-Light.png" alt="Company Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/200x40/111827/d1d5db?text=Logo';">
+            <h1 class="text-3xl font-bold ml-4">Equipment Checkout System</h1>
         </header>
 
-        <!-- Main Navigation -->
-        <div class="mb-8">
-            <div id="main-nav" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
-                <button class="nav-btn" data-view="reserve">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 12.75h.008v.008H12v-.008z" /></svg>
-                    Reserve
-                </button>
-                 <button class="nav-btn" data-view="checkout">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3v11.25" /></svg>
-                    Checkout
-                </button>
-                 <button class="nav-btn" data-view="checkin">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15V7.5l-2.25 2.25M15 9.75V18l2.25-2.25M9 9.75h6.75" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    Checkin
-                </button>
-                 <button class="nav-btn" data-view="inventory">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                    Inventory
-                </button>
-                 <button class="nav-btn" data-view="calendar">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18" /></svg>
-                    Calendar
-                </button>
-                 <button class="nav-btn" data-view="log">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
-                    Log
-                </button>
-                <button class="nav-btn" data-view="admin">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.39.39 1.024 0 1.414l-.527.737c-.25.35-.272.806-.108 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.11v1.093c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.39.39.39 1.023 0 1.414l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.93l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527a1.125 1.125 0 01-1.45-.12l-.773-.774a1.125 1.125 0 010-1.414l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.11v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.93l.15-.893z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <div class="mb-8 space-y-4">
+                <div id="database-selectors" class="space-y-4">
+                    <div id="location-selector" class="flex items-center justify-center space-x-2 p-1 bg-gray-800 rounded-lg">
+                        <button class="sub-nav-btn w-full" data-location="LA">LA</button>
+                        <button class="sub-nav-btn w-full" data-location="NL">NL</button>
+                        <button class="sub-nav-btn w-full" data-location="BR">BR</button>
+                    </div>
+                    <div id="type-selector" class="flex items-center justify-center space-x-2 p-1 bg-gray-800 rounded-lg">
+                        <button class="sub-nav-btn w-full" data-type="Equipment">Equipment</button>
+                        <button class="sub-nav-btn w-full" data-type="Products">Products</button>
+                    </div>
+                </div>
+                <div id="main-nav" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+                    <button class="nav-btn" data-view="reserve">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 12.75h.008v.008H12v-.008z" /></svg>
+                        Reserve
+                    </button>
+                     <button class="nav-btn" data-view="checkout">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3v11.25" /></svg>
+                        Checkout
+                    </button>
+                     <button class="nav-btn" data-view="checkin">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" /></svg>
+                        Checkin
+                    </button>
+                     <button class="nav-btn" data-view="inventory">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                        Inventory
+                    </button>
+                     <button class="nav-btn" data-view="calendar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18" /></svg>
+                        Calendar
+                    </button>
+                     <button class="nav-btn" data-view="log">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                        Log
+                    </button>
+                    <button class="nav-btn" data-view="admin">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.39.39 1.024 0 1.414l-.527.737c-.25.35-.272.806-.108 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.11v1.093c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.39.39.39 1.023 0 1.414l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.93l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527a1.125 1.125 0 01-1.45-.12l-.773-.774a1.125 1.125 0 010-1.414l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.11v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.93l.15-.893z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     Admin
                 </button>
             </div>
         </div>
 
         <main id="main-content">
-            <!-- Reservation Form -->
             <div id="reserve-view" class="view card p-6 mb-8">
-                <h2 class="text-xl font-semibold mb-4">Reserve Equipment</h2>
+                <h2 class="text-xl font-semibold mb-4">Reserve Item</h2>
                 <div class="flex items-center space-x-2 mb-4" id="reservation-mode-nav">
                     <button class="sub-nav-btn active" data-mode="new">New Reservation</button>
                     <button class="sub-nav-btn" data-mode="update">Update Existing Reservation</button>
@@ -176,7 +202,6 @@
                         <select id="reservationUser" name="reservationUser" class="mt-1 input-field" required></select>
                     </div>
 
-                    <!-- This div will be shown for 'update' mode -->
                     <div id="update-reservation-fields" class="hidden">
                         <label for="existingReservationSelect" class="block text-sm font-medium">Select Your Reservation</label>
                         <select id="existingReservationSelect" class="mt-1 input-field"></select>
@@ -199,24 +224,22 @@
                             <select id="reserveCategoryFilter" class="mt-1 input-field"></select>
                         </div>
                         <div>
-                            <label for="reserveEquipmentId" class="block text-sm font-medium">Equipment</label>
+                            <label for="reserveEquipmentId" class="block text-sm font-medium">Item</label>
                             <select id="reserveEquipmentId" name="reserveEquipmentId" class="mt-1 input-field"></select>
                         </div>
                         <button type="button" id="addToReservationBtn" class="btn btn-secondary w-full">Add to Reservation</button>
                     </div>
 
-                    <div id="reservationListContainer" class="space-y-2 pt-4 border-t">
-                        <!-- Running list will be injected here -->
-                    </div>
+                    <div id="reservationListContainer" class="space-y-2 pt-4 border-t"></div>
 
-                    <div>
+                    <div class="pt-2 flex items-center justify-between space-x-4">
                         <button type="submit" id="submitReservationBtn" class="btn btn-primary w-full">Reserve Item</button>
+                        <button type="button" id="cancelReservationBtn" class="btn btn-danger w-auto text-sm hidden whitespace-nowrap">Cancel Reservation</button>
                     </div>
                 </form>
                 <div id="reservationMessage" class="mt-3 text-sm font-medium"></div>
             </div>
 
-            <!-- Checkout Form -->
             <div id="checkout-view" class="view card p-6 mb-8">
                 <h2 class="text-xl font-semibold mb-4">Log a New Checkout</h2>
                 <form id="checkoutForm" class="space-y-4">
@@ -224,9 +247,13 @@
                         <label for="checkoutUser" class="block text-sm font-medium">Checked Out By</label>
                         <select id="checkoutUser" name="checkoutUser" class="mt-1 input-field" required></select>
                     </div>
+                    <div id="checkout-reservation-fields" class="hidden">
+                        <label for="checkoutReservationSelect" class="block text-sm font-medium">Select Existing Reservation (Optional)</label>
+                        <select id="checkoutReservationSelect" class="mt-1 input-field"></select>
+                    </div>
                      <div>
-                        <label for="dueDate" class="block text-sm font-medium">Due Date</label>
-                        <input type="date" id="dueDate" name="dueDate" class="mt-1 input-field" required>
+                        <label for="returnDate" class="block text-sm font-medium">Return Date</label>
+                        <input type="date" id="returnDate" name="returnDate" class="mt-1 input-field" required>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end pt-4 border-t">
@@ -235,29 +262,73 @@
                             <select id="checkoutCategoryFilter" class="mt-1 input-field"></select>
                         </div>
                         <div>
-                            <label for="equipmentId" class="block text-sm font-medium">Equipment ID</label>
+                            <label for="equipmentId" class="block text-sm font-medium">Item ID</label>
                             <select id="equipmentId" name="equipmentId" class="mt-1 input-field"></select>
                         </div>
                          <button type="button" id="addToCheckoutBtn" class="btn btn-secondary w-full">Add to Checkout</button>
                     </div>
                     
-                    <div id="checkoutListContainer" class="space-y-2 pt-4 border-t">
-                        <!-- Running list will be injected here -->
-                    </div>
+                    <div id="checkoutListContainer" class="space-y-2 pt-4 border-t"></div>
 
                     <div>
                         <button type="submit" id="submitCheckoutBtn" class="btn btn-primary w-full">Check Out Item</button>
                     </div>
                 </form>
-                <div id="formError" class="text-red-600 mt-2 text-sm font-medium hidden"></div>
+                <div id="formError" class="text-red-500 mt-2 text-sm font-medium hidden"></div>
+                <div id="checkoutMessage" class="text-green-400 mt-2 text-sm font-medium"></div>
+                <button type="button" id="newCheckoutBtn" class="btn btn-secondary w-full mt-4 hidden">Start New Checkout</button>
             </div>
 
-            <!-- Equipment Inventory Section -->
+            <div id="checkin-view" class="view card p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">Check-in Item</h2>
+                <form id="checkinForm" class="space-y-4">
+                    <div>
+                        <label for="checkinUser" class="block text-sm font-medium">Returned By</label>
+                        <select id="checkinUser" name="checkinUser" class="mt-1 input-field" required></select>
+                    </div>
+                    <div>
+                        <label for="checkinDate" class="block text-sm font-medium">Return Date</label>
+                        <input type="date" id="checkinDate" name="checkinDate" class="mt-1 input-field" required>
+                    </div>
+            
+                    <div id="checkin-options-section" class="hidden pt-4 border-t space-y-4">
+                        <div>
+                            <label for="checkinTicketSelect" class="block text-sm font-medium">Return Entire Checkout</label>
+                            <select id="checkinTicketSelect" class="mt-1 input-field"></select>
+                        </div>
+                        <div class="text-center text-gray-400">AND/OR</div>
+                        <div>
+                             <button type="button" id="returnSingleBtn" class="btn btn-secondary w-full">Return Single Items Manually</button>
+                        </div>
+                    </div>
+            
+                    <div id="checkin-manual-section" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end pt-4 border-t">
+                        <div>
+                            <label for="checkinCategoryFilter" class="block text-sm font-medium">Category</label>
+                            <select id="checkinCategoryFilter" class="mt-1 input-field"></select>
+                        </div>
+                        <div>
+                            <label for="checkinEquipmentId" class="block text-sm font-medium">Item</label>
+                            <select id="checkinEquipmentId" name="checkinEquipmentId" class="mt-1 input-field"></select>
+                        </div>
+                        <button type="button" id="addToCheckinBtn" class="btn btn-secondary w-full">Add to Check-in</button>
+                    </div>
+                    
+                    <div id="checkinListContainer" class="space-y-2 pt-4 border-t"></div>
+            
+                    <div>
+                        <button type="submit" id="submitCheckinBtn" class="btn btn-primary w-full">Check In Items</button>
+                    </div>
+                </form>
+                <div id="checkinMessage" class="mt-2 text-sm font-medium"></div>
+                <button type="button" id="newCheckinBtn" class="btn btn-secondary w-full mt-4 hidden">Start New Check-in</button>
+            </div>
+
             <div id="inventory-view" class="view card overflow-hidden mb-8">
                 <div class="p-6 border-b">
                     <div class="flex justify-between items-center">
                         <div>
-                            <h2 class="text-xl font-semibold">Equipment Inventory</h2>
+                            <h2 id="inventory-title" class="text-xl font-semibold">Equipment Inventory</h2>
                             <p class="text-sm text-gray-400 mt-1">Master list of all available gear.</p>
                         </div>
                         <div>
@@ -283,12 +354,11 @@
                 </div>
             </div>
 
-            <!-- Checkout Log Section -->
             <div id="log-view" class="view card overflow-hidden">
-                 <div class="p-6 border-b">
-                    <h2 class="text-xl font-semibold">Checkout Log</h2>
-                     <p class="text-sm text-gray-400 mt-1">Running history of all checkouts and returns.</p>
-                </div>
+             <div class="p-6 border-b">
+                <h2 id="log-title" class="text-xl font-semibold">Checkout Log</h2>
+                 <p class="text-sm text-gray-400 mt-1">Running history of all checkouts and returns.</p>
+            </div>
                 <div class="overflow-x-auto max-h-[600px]">
                     <table class="min-w-full divide-y">
                         <thead class="table-header sticky top-0">
@@ -306,10 +376,6 @@
                 </div>
             </div>
             
-            <!-- Placeholder Views -->
-            <div id="checkin-view" class="view card p-6">
-                <h2 class="text-xl font-semibold">Check-in System (Coming Soon)</h2>
-            </div>
             <div id="calendar-view" class="view card p-6">
                  <h2 class="text-xl font-semibold">Reservation Calendar (Coming Soon)</h2>
             </div>
@@ -321,33 +387,98 @@
 
     <script>
         // --- DATA SIMULATION ---
-        const inventory = [
-            { id: 'CAM-001', name: 'Canon EOS R5', category: 'Camera' },
-            { id: 'CAM-002', name: 'Sony A7S III', category: 'Camera' },
-            { id: 'MIC-001', name: 'Shure SM7B', category: 'Audio' },
-            { id: 'MIC-002', name: 'Rode NTG-3', category: 'Audio' },
-            { id: 'LAP-001', name: 'MacBook Pro 16"', category: 'Computer' },
-            { id: 'LAP-002', name: 'Dell XPS 15', category: 'Computer' },
-            { id: 'TRI-001', name: 'Manfrotto Tripod', category: 'Support' },
-        ];
+        const allData = {
+            LA: {
+                Equipment: {
+                    inventory: [
+                        { id: 'CAM-001', name: 'Canon EOS R5', category: 'Camera' },
+                        { id: 'MIC-001', name: 'Shure SM7B', category: 'Audio' },
+                        { id: 'LAP-001', name: 'MacBook Pro 16"', category: 'Computer' },
+                    ],
+                    checkoutLog: [
+                        { logId: 1, checkoutBatchId: 'CO-1', equipmentId: 'CAM-001', name: 'Alice', dateOut: '2025-08-10', dueDate: '2025-08-15', dateReturned: '' },
+                    ],
+                    reservations: [],
+                    users: ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+                    nextLogId: 2,
+                    nextCheckoutBatchId: 2,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                },
+                Products: {
+                    inventory: [
+                        { id: 'PROD-01', name: 'T-Shirt', category: 'Apparel' },
+                        { id: 'PROD-02', name: 'Mug', category: 'Merchandise' },
+                    ],
+                    checkoutLog: [],
+                    reservations: [],
+                    users: ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+                    nextLogId: 1,
+                    nextCheckoutBatchId: 1,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                }
+            },
+            NL: {
+                Equipment: {
+                    inventory: [
+                        { id: 'CAM-003', name: 'Sony A7S III', category: 'Camera' },
+                        { id: 'TRI-001', name: 'Manfrotto Tripod', category: 'Support' },
+                    ],
+                    checkoutLog: [],
+                    reservations: [],
+                    users: ['Frank', 'Grace'],
+                    nextLogId: 1,
+                    nextCheckoutBatchId: 1,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                },
+                Products: {
+                    inventory: [],
+                    checkoutLog: [],
+                    reservations: [],
+                    users: ['Frank', 'Grace'],
+                    nextLogId: 1,
+                    nextCheckoutBatchId: 1,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                }
+            },
+            BR: {
+                Equipment: {
+                    inventory: [
+                        { id: 'MIC-002', name: 'Rode NTG-3', category: 'Audio' },
+                    ],
+                    checkoutLog: [],
+                    reservations: [],
+                    users: ['Heidi', 'Ivan'],
+                    nextLogId: 1,
+                    nextCheckoutBatchId: 1,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                },
+                Products: {
+                    inventory: [
+                        { id: 'PROD-03', name: 'Sticker Pack', category: 'Merchandise' },
+                    ],
+                    checkoutLog: [],
+                    reservations: [],
+                    users: ['Heidi', 'Ivan'],
+                    nextLogId: 1,
+                    nextCheckoutBatchId: 1,
+                    nextReservationId: 1,
+                    nextReservationBatchId: 1,
+                }
+            }
+        };
 
-        const users = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
-
-        const checkoutLog = [
-            { logId: 1, equipmentId: 'CAM-002', name: 'Alice', dateOut: '2025-08-10', dueDate: '2025-08-15', dateReturned: '' },
-            { logId: 2, equipmentId: 'LAP-001', name: 'Bob', dateOut: '2025-08-05', dueDate: '2025-08-10', dateReturned: '' },
-            { logId: 3, equipmentId: 'MIC-001', name: 'Charlie', dateOut: '2025-08-01', dueDate: '2025-08-08', dateReturned: '2025-08-07' },
-        ];
-        let nextLogId = 4;
-
-        let reservations = [
-             { reservationId: 1, reservationBatchId: 'R20250810-1', equipmentId: 'TRI-001', name: 'David', startDate: '2025-08-20', endDate: '2025-08-22' }
-        ];
-        let nextReservationId = 2;
-        let nextReservationBatchId = 2;
+        let currentData = {};
+        let currentLocation = 'LA';
+        let currentType = 'Equipment';
         
         let currentReservationItems = [];
         let currentCheckoutItems = [];
+        let currentCheckinItems = [];
         let reservationMode = 'new'; // 'new' or 'update'
         let selectedReservationBatchId = null;
 
@@ -372,10 +503,10 @@
             const newStart = new Date(newStartDate + 'T00:00:00');
             const newEnd = new Date(newEndDate + 'T00:00:00');
 
-            const conflictingCheckout = checkoutLog.find(log => log.equipmentId === equipmentId && log.dateReturned === '');
+            const conflictingCheckout = currentData.checkoutLog.find(log => log.equipmentId === equipmentId && log.dateReturned === '');
             if (conflictingCheckout) return false;
 
-            const conflictingReservation = reservations.find(res => {
+            const conflictingReservation = currentData.reservations.find(res => {
                 if (res.equipmentId !== equipmentId) return false;
                 if (ignoreBatchId && res.reservationBatchId === ignoreBatchId) return false;
                 const existingStart = new Date(res.startDate + 'T00:00:00');
@@ -389,15 +520,15 @@
         const calculateInventoryStatus = () => {
             const today = new Date(getTodayDateString() + 'T00:00:00');
 
-            return inventory.map(item => {
-                const activeCheckout = checkoutLog.find(log => log.equipmentId === item.id && log.dateReturned === '');
+            return currentData.inventory.map(item => {
+                const activeCheckout = currentData.checkoutLog.find(log => log.equipmentId === item.id && log.dateReturned === '');
                 if (activeCheckout) {
                     const dueDate = new Date(activeCheckout.dueDate + 'T00:00:00');
                     const status = dueDate < today ? 'Overdue' : 'Checked Out';
                     return { ...item, status, checkedOutTo: activeCheckout.name, dueDate: activeCheckout.dueDate };
                 }
 
-                const upcomingReservations = reservations
+                const upcomingReservations = currentData.reservations
                     .filter(res => res.equipmentId === item.id && new Date(res.startDate + 'T00:00:00') >= today)
                     .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
                 
@@ -418,7 +549,7 @@
             const filteredInventory = inventoryWithStatus.filter(item => filterCategory === 'All' || item.category === filterCategory);
 
             if (filteredInventory.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="table-cell text-center text-gray-500">No equipment found.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="table-cell text-center text-gray-500">No items found.</td></tr>`;
                 return;
             }
 
@@ -443,7 +574,7 @@
             const tableBody = document.getElementById('logTableBody');
             tableBody.innerHTML = '';
             
-            const sortedLog = [...checkoutLog].sort((a, b) => new Date(b.dateOut) - new Date(a.dateOut));
+            const sortedLog = [...currentData.checkoutLog].sort((a, b) => new Date(b.dateOut) - new Date(a.dateOut));
 
             if (sortedLog.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="6" class="table-cell text-center text-gray-500">No checkout history.</td></tr>`;
@@ -451,7 +582,7 @@
             }
 
             sortedLog.forEach(log => {
-                const itemDetails = inventory.find(i => i.id === log.equipmentId);
+                const itemDetails = currentData.inventory.find(i => i.id === log.equipmentId);
                 const isReturned = log.dateReturned !== '';
                 const isOverdue = !isReturned && new Date(log.dueDate + 'T00:00:00') < new Date(getTodayDateString() + 'T00:00:00');
                 const rowClass = isReturned ? 'status-returned' : (isOverdue ? 'bg-red-800 bg-opacity-20' : '');
@@ -477,9 +608,13 @@
             if (currentReservationItems.length === 0) {
                 container.innerHTML = `<p class="text-sm text-gray-400">No items added to reservation yet.</p>`;
                 submitBtn.textContent = 'Reserve Item';
+                if (reservationMode === 'update') {
+                    submitBtn.disabled = true;
+                }
                 return;
             }
 
+            submitBtn.disabled = false;
             currentReservationItems.forEach(item => {
                 const itemEl = document.createElement('div');
                 itemEl.className = 'flex justify-between items-center bg-gray-800 p-2 rounded-md';
@@ -516,9 +651,30 @@
 
             submitBtn.textContent = `Check Out ${currentCheckoutItems.length} Item${currentCheckoutItems.length > 1 ? 's' : ''}`;
         };
+
+        const renderCheckinList = () => {
+            const container = document.getElementById('checkinListContainer');
+            container.innerHTML = '';
+
+            if (currentCheckinItems.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400">No items added to check-in yet.</p>`;
+                return;
+            }
+
+            currentCheckinItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex justify-between items-center bg-gray-800 p-2 rounded-md';
+                itemEl.innerHTML = `
+                    <span class="font-medium text-sm">${item.name} (${item.id})</span>
+                    <button type="button" class="text-red-400 hover:text-red-500 font-bold" onclick="removeFromCheckin(${item.logId})">&times;</button>
+                `;
+                container.appendChild(itemEl);
+            });
+        };
         
         const populateDropdown = (selectId, items, filterFn, optionTextFn) => {
             const select = document.getElementById(selectId);
+            const currentValue = select.value;
             select.innerHTML = `<option value="" disabled selected>Select...</option>`;
             items.filter(filterFn).forEach(item => {
                 const option = document.createElement('option');
@@ -526,6 +682,7 @@
                 option.textContent = optionTextFn(item).text;
                 select.appendChild(option);
             });
+            select.value = currentValue;
         };
         
         const populateReservationEquipmentDropdown = (inventoryData, reserveCategory, startDate, endDate) => {
@@ -553,9 +710,37 @@
                 });
         };
 
-        const populateCategoryFilter = (selectId) => {
+        const populateCheckinEquipmentDropdown = (selectedUser, category) => {
+            const select = document.getElementById('checkinEquipmentId');
+            select.innerHTML = '<option value="" disabled selected>Select an item...</option>';
+            if (!selectedUser || !category) return;
+
+            const userCheckedOutItems = currentData.checkoutLog.filter(log => log.name === selectedUser && log.dateReturned === '');
+
+            userCheckedOutItems.forEach(log => {
+                const itemDetails = currentData.inventory.find(i => i.id === log.equipmentId);
+                const alreadyAdded = currentCheckinItems.some(item => item.logId === log.logId);
+                const isInCategory = category === 'All' || itemDetails.category === category;
+
+                if (itemDetails && !alreadyAdded && isInCategory) {
+                    const option = document.createElement('option');
+                    option.value = log.logId;
+                    option.textContent = `${itemDetails.name} (Due: ${formatDate(log.dueDate)})`;
+                    select.appendChild(option);
+                }
+            });
+        };
+
+        const populateCategoryFilter = (selectId, user = null) => {
             const select = document.getElementById(selectId);
-            const categories = ['All', ...new Set(inventory.map(item => item.category))];
+            let categories = [];
+            if (user) {
+                const userItems = currentData.checkoutLog.filter(log => log.name === user && log.dateReturned === '')
+                                              .map(log => currentData.inventory.find(i => i.id === log.equipmentId));
+                categories = ['All', ...new Set(userItems.map(item => item.category))];
+            } else {
+                categories = ['All', ...new Set(currentData.inventory.map(item => item.category))];
+            }
             select.innerHTML = '';
             categories.forEach(category => {
                 const option = document.createElement('option');
@@ -566,15 +751,16 @@
         };
 
         const populateUserDropdowns = () => {
-            populateDropdown('checkoutUser', users, () => true, user => ({ value: user, text: user }));
-            populateDropdown('reservationUser', users, () => true, user => ({ value: user, text: user }));
+            populateDropdown('checkoutUser', currentData.users, () => true, user => ({ value: user, text: user }));
+            populateDropdown('reservationUser', currentData.users, () => true, user => ({ value: user, text: user }));
+            populateDropdown('checkinUser', currentData.users, () => true, user => ({ value: user, text: user }));
         };
 
         const populateExistingReservationsDropdown = (currentUser) => {
             const select = document.getElementById('existingReservationSelect');
             select.innerHTML = '<option value="" disabled selected>Select a reservation to update...</option>';
             
-            const userReservations = reservations.filter(r => r.name === currentUser);
+            const userReservations = currentData.reservations.filter(r => r.name === currentUser);
             const batchIds = [...new Set(userReservations.map(r => r.reservationBatchId))];
 
             batchIds.forEach(batchId => {
@@ -585,34 +771,171 @@
                 select.appendChild(option);
             });
         };
+        
+        const populateCheckoutReservationsDropdown = (currentUser) => {
+            const select = document.getElementById('checkoutReservationSelect');
+            select.innerHTML = '<option value="" selected>None - Manual Checkout</option>';
+            
+            const activeCheckouts = currentData.checkoutLog.filter(log => !log.dateReturned);
+            const userReservationBatches = [...new Set(currentData.reservations.filter(r => r.name === currentUser).map(r => r.reservationBatchId))];
+            
+            userReservationBatches.forEach(batchId => {
+                const reservationItems = currentData.reservations.filter(r => r.reservationBatchId === batchId);
+                const isAlreadyCheckedOut = reservationItems.some(resItem => 
+                    activeCheckouts.some(checkoutItem => checkoutItem.equipmentId === resItem.equipmentId)
+                );
 
-        // --- EVENT HANDLERS ---
+                if (!isAlreadyCheckedOut) {
+                    const firstItem = reservationItems[0];
+                    const option = document.createElement('option');
+                    option.value = batchId;
+                    option.textContent = `ID: ${batchId} (${formatDate(firstItem.startDate)} - ${formatDate(firstItem.endDate)})`;
+                    select.appendChild(option);
+                }
+            });
+        };
+
+        const populateCheckinTicketDropdown = (user) => {
+            const select = document.getElementById('checkinTicketSelect');
+            select.innerHTML = '<option value="" disabled selected>Select a checkout ticket...</option>';
+            if (!user) return;
+
+            const userLogs = currentData.checkoutLog.filter(log => log.name === user && log.dateReturned === '');
+            const batchIds = [...new Set(userLogs.map(log => log.checkoutBatchId))];
+
+            batchIds.forEach(batchId => {
+                const itemsInBatch = userLogs.filter(log => log.checkoutBatchId === batchId);
+                if (itemsInBatch.length > 0) {
+                    const firstItem = itemsInBatch[0];
+                    const option = document.createElement('option');
+                    option.value = batchId;
+                    option.textContent = `Ticket ${batchId} (${itemsInBatch.length} items, due ${formatDate(firstItem.dueDate)})`;
+                    select.appendChild(option);
+                }
+            });
+        };
+
+
+        // --- EVENT HANDLERS & UI LOGIC ---
+        const resetCheckoutForm = () => {
+            const form = document.getElementById('checkoutForm');
+            const messageDiv = document.getElementById('checkoutMessage');
+            
+            messageDiv.textContent = '';
+            currentCheckoutItems = [];
+            form.reset();
+
+            Array.from(form.elements).forEach(el => el.disabled = false);
+
+            document.getElementById('submitCheckoutBtn').classList.remove('hidden');
+            document.getElementById('newCheckoutBtn').classList.add('hidden');
+            document.getElementById('checkout-reservation-fields').classList.add('hidden');
+
+            updateAndRenderAll();
+        };
+
+        const resetCheckinForm = () => {
+            const form = document.getElementById('checkinForm');
+            const messageDiv = document.getElementById('checkinMessage');
+            
+            messageDiv.textContent = '';
+            currentCheckinItems = [];
+            form.reset();
+            document.getElementById('checkinDate').value = getTodayDateString();
+
+            Array.from(form.elements).forEach(el => el.disabled = false);
+
+            document.getElementById('submitCheckinBtn').classList.remove('hidden');
+            document.getElementById('newCheckinBtn').classList.add('hidden');
+            document.getElementById('checkin-options-section').classList.add('hidden');
+            document.getElementById('checkin-manual-section').classList.add('hidden');
+
+            updateAndRenderAll();
+        };
+
+        const resetReservationForm = () => {
+            const form = document.getElementById('reservationForm');
+            const messageDiv = document.getElementById('reservationMessage');
+
+            messageDiv.textContent = '';
+            currentReservationItems = [];
+            form.reset();
+
+            switchReservationMode('new');
+        };
+
         const handleCheckoutSubmit = (event) => {
             event.preventDefault();
             const form = event.target;
             const errorDiv = document.getElementById('formError');
+            const messageDiv = document.getElementById('checkoutMessage');
             errorDiv.classList.add('hidden');
+            messageDiv.textContent = '';
 
             const name = form.checkoutUser.value;
-            const dueDate = form.dueDate.value;
+            const returnDate = form.returnDate.value;
 
             if (currentCheckoutItems.length === 0) {
                 errorDiv.textContent = 'Please add at least one item to check out.';
                 errorDiv.classList.remove('hidden');
                 return;
             }
-            if (!name || !dueDate) {
-                errorDiv.textContent = 'Please provide your name and a due date.';
+            if (!name || !returnDate) {
+                errorDiv.textContent = 'Please provide your name and a return date.';
                 errorDiv.classList.remove('hidden');
                 return;
             }
 
+            const batchId = `CO-${currentData.nextCheckoutBatchId++}`;
             currentCheckoutItems.forEach(item => {
-                checkoutLog.push({ logId: nextLogId++, equipmentId: item.id, name, dateOut: getTodayDateString(), dueDate, dateReturned: '' });
+                currentData.checkoutLog.push({ logId: currentData.nextLogId++, checkoutBatchId: batchId, equipmentId: item.id, name, dateOut: getTodayDateString(), dueDate: returnDate, dateReturned: '' });
             });
             
-            currentCheckoutItems = [];
-            form.reset();
+            messageDiv.textContent = 'Checkout successful!';
+            document.getElementById('submitCheckoutBtn').classList.add('hidden');
+            document.getElementById('newCheckoutBtn').classList.remove('hidden');
+            
+            Array.from(form.elements).forEach(el => {
+                if(el.type !== 'button') {
+                    el.disabled = true;
+                }
+            });
+            document.querySelectorAll('#checkoutListContainer button').forEach(btn => btn.disabled = true);
+
+            updateAndRenderAll();
+        };
+
+        const handleCheckinSubmit = (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const messageDiv = document.getElementById('checkinMessage');
+            messageDiv.textContent = '';
+
+            const returnDate = form.checkinDate.value;
+
+            if (currentCheckinItems.length === 0) {
+                messageDiv.textContent = 'Please add at least one item to check in.';
+                messageDiv.className = 'mt-2 text-sm font-medium text-red-400';
+                return;
+            }
+
+            currentCheckinItems.forEach(itemToCheckIn => {
+                const logEntry = currentData.checkoutLog.find(log => log.logId === itemToCheckIn.logId);
+                if (logEntry) {
+                    logEntry.dateReturned = returnDate;
+                }
+            });
+
+            messageDiv.textContent = 'Check-in successful!';
+            messageDiv.className = 'mt-2 text-sm font-medium text-green-400';
+            document.getElementById('submitCheckinBtn').classList.add('hidden');
+            document.getElementById('newCheckinBtn').classList.remove('hidden');
+
+            Array.from(form.elements).forEach(el => {
+                if (el.type !== 'button') el.disabled = true
+            });
+            document.querySelectorAll('#checkinListContainer button').forEach(btn => btn.disabled = true);
+            
             updateAndRenderAll();
         };
 
@@ -644,39 +967,48 @@
             
             if (reservationMode === 'new') {
                 const date = new Date();
-                const batchId = `R${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}-${nextReservationBatchId++}`;
+                const batchId = `R${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}-${currentData.nextReservationBatchId++}`;
                 
                 currentReservationItems.forEach(item => {
-                    reservations.push({ reservationId: nextReservationId++, reservationBatchId: batchId, equipmentId: item.id, name, startDate, endDate });
+                    currentData.reservations.push({ reservationId: currentData.nextReservationId++, reservationBatchId: batchId, equipmentId: item.id, name, startDate, endDate });
                 });
                 messageDiv.textContent = `Reservation ${batchId} successful!`;
                 messageDiv.className = 'mt-3 text-sm font-medium text-green-400';
 
             } else if (reservationMode === 'update' && selectedReservationBatchId) {
-                // Remove old entries for this batch
-                reservations = reservations.filter(r => r.reservationBatchId !== selectedReservationBatchId);
-                // Add updated entries
+                currentData.reservations = currentData.reservations.filter(r => r.reservationBatchId !== selectedReservationBatchId);
                 currentReservationItems.forEach(item => {
-                    reservations.push({ reservationId: nextReservationId++, reservationBatchId: selectedReservationBatchId, equipmentId: item.id, name, startDate, endDate });
+                    currentData.reservations.push({ reservationId: currentData.nextReservationId++, reservationBatchId: selectedReservationBatchId, equipmentId: item.id, name, startDate, endDate });
                 });
                 messageDiv.textContent = `Reservation ${selectedReservationBatchId} updated successfully!`;
                 messageDiv.className = 'mt-3 text-sm font-medium text-green-400';
             }
             
-            currentReservationItems = [];
-            form.reset();
-            switchReservationMode('new');
-            updateAndRenderAll();
+            setTimeout(() => {
+                resetReservationForm();
+                messageDiv.textContent = '';
+            }, 2000);
+        };
+
+        const handleCancelReservation = () => {
+            if (!selectedReservationBatchId) return;
+
+            currentData.reservations = currentData.reservations.filter(r => r.reservationBatchId !== selectedReservationBatchId);
+            
+            const messageDiv = document.getElementById('reservationMessage');
+            messageDiv.textContent = `Reservation ${selectedReservationBatchId} has been cancelled.`;
+            messageDiv.className = 'mt-3 text-sm font-medium text-green-400';
+
+            setTimeout(() => {
+                resetReservationForm();
+                messageDiv.textContent = '';
+            }, 2000);
         };
         
         const handleAddToReservation = () => {
             const equipmentId = document.getElementById('reserveEquipmentId').value;
             if (!equipmentId) return;
-
-            const alreadyAdded = currentReservationItems.some(item => item.id === equipmentId);
-            if (alreadyAdded) return;
-
-            const itemDetails = inventory.find(item => item.id === equipmentId);
+            const itemDetails = currentData.inventory.find(item => item.id === equipmentId);
             if (itemDetails) {
                 currentReservationItems.push(itemDetails);
                 updateAndRenderAll();
@@ -686,19 +1018,34 @@
         const handleAddToCheckout = () => {
             const equipmentId = document.getElementById('equipmentId').value;
             if (!equipmentId) return;
-
-            const alreadyAdded = currentCheckoutItems.some(item => item.id === equipmentId);
-            if (alreadyAdded) return;
-
-            const itemDetails = inventory.find(item => item.id === equipmentId);
+            document.getElementById('checkoutReservationSelect').value = "";
+            const itemDetails = currentData.inventory.find(item => item.id === equipmentId);
             if (itemDetails) {
                 currentCheckoutItems.push(itemDetails);
+                updateAndRenderAll();
+            }
+        };
+
+        const handleAddToCheckin = () => {
+            const logId = parseInt(document.getElementById('checkinEquipmentId').value, 10);
+            if (!logId) return;
+
+            const logEntry = currentData.checkoutLog.find(log => log.logId === logId);
+            const itemDetails = currentData.inventory.find(i => i.id === logEntry.equipmentId);
+
+            if (logEntry && itemDetails) {
+                currentCheckinItems.push({
+                    logId: logEntry.logId,
+                    id: itemDetails.id,
+                    name: itemDetails.name
+                });
                 updateAndRenderAll();
             }
         };
         
         window.removeFromReservation = (equipmentId) => {
             currentReservationItems = currentReservationItems.filter(item => item.id !== equipmentId);
+            document.getElementById('submitReservationBtn').textContent = 'Update Reservation';
             updateAndRenderAll();
         };
         
@@ -707,8 +1054,13 @@
             updateAndRenderAll();
         };
 
+        window.removeFromCheckin = (logId) => {
+            currentCheckinItems = currentCheckinItems.filter(item => item.logId !== logId);
+            updateAndRenderAll();
+        };
+
         window.returnItem = (logId) => {
-            const logEntry = checkoutLog.find(log => log.logId === logId);
+            const logEntry = currentData.checkoutLog.find(log => log.logId === logId);
             if (logEntry) {
                 logEntry.dateReturned = getTodayDateString();
                 updateAndRenderAll();
@@ -723,6 +1075,15 @@
             document.querySelectorAll('#main-content .view').forEach(view => view.classList.remove('active'));
             const targetView = document.getElementById(`${viewName}-view`);
             if (targetView) targetView.classList.add('active');
+
+            // Reset forms when switching to them
+            if (viewName === 'checkin') {
+                resetCheckinForm();
+            } else if (viewName === 'checkout') {
+                resetCheckoutForm();
+            } else if (viewName === 'reserve') {
+                resetReservationForm();
+            }
         };
 
         const switchReservationMode = (mode) => {
@@ -731,7 +1092,7 @@
             document.querySelector(`#reservation-mode-nav .sub-nav-btn[data-mode="${mode}"]`).classList.add('active');
 
             const updateFields = document.getElementById('update-reservation-fields');
-            const submitBtn = document.getElementById('submitReservationBtn');
+            const cancelBtn = document.getElementById('cancelReservationBtn');
             const nameField = document.getElementById('reservationUser');
             
             currentReservationItems = [];
@@ -739,31 +1100,59 @@
             
             if (mode === 'new') {
                 updateFields.classList.add('hidden');
-                submitBtn.textContent = 'Reserve Item';
+                cancelBtn.classList.add('hidden');
                 selectedReservationBatchId = null;
                 nameField.disabled = false;
             } else {
                 updateFields.classList.remove('hidden');
-                submitBtn.textContent = 'Update Reservation';
+                cancelBtn.classList.remove('hidden');
                 const currentUser = nameField.value;
                 populateExistingReservationsDropdown(currentUser);
             }
             updateAndRenderAll();
         };
 
+        const setActiveDatabase = (location, type) => {
+            currentLocation = location;
+            currentType = type;
+            currentData = allData[location][type];
+
+            document.querySelectorAll('#location-selector .sub-nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.location === location);
+            });
+            document.querySelectorAll('#type-selector .sub-nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.type === type);
+            });
+
+            document.getElementById('inventory-title').textContent = `${type} Inventory`;
+            document.getElementById('log-title').textContent = `${type} Checkout Log`;
+            document.querySelector('#reserve-view h2').textContent = `Reserve ${type}`;
+            document.querySelector('#checkout-view h2').textContent = `Log a New Checkout`;
+            document.querySelector('#checkin-view h2').textContent = `Check-in ${type}`;
+            
+            // Reset everything and re-render
+            resetCheckoutForm();
+            resetCheckinForm();
+            resetReservationForm();
+            populateUserDropdowns();
+            populateCategoryFilter('categoryFilter');
+            populateCategoryFilter('checkoutCategoryFilter');
+            populateCategoryFilter('reserveCategoryFilter');
+            updateAndRenderAll();
+        };
+
         // --- INITIALIZATION ---
         const updateAndRenderAll = () => {
             const inventoryWithStatus = calculateInventoryStatus();
-            const invCategory = document.getElementById('categoryFilter').value;
-            const checkoutCategory = document.getElementById('checkoutCategoryFilter').value;
-            const reserveCategory = document.getElementById('reserveCategoryFilter').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const invCategory = document.getElementById('categoryFilter').value || 'All';
+            const checkoutCategory = document.getElementById('checkoutCategoryFilter').value || 'All';
+            const reserveCategory = document.getElementById('reserveCategoryFilter').value || 'All';
             
             renderInventory(inventoryWithStatus, invCategory);
             renderLog();
             renderReservationList();
             renderCheckoutList();
+            renderCheckinList();
             
             populateDropdown('equipmentId', inventoryWithStatus, item => {
                 const isInCategory = (checkoutCategory === 'All' || item.category === checkoutCategory);
@@ -771,63 +1160,159 @@
                 return item.status === 'Available' && isInCategory && notAlreadyAdded;
             }, item => ({ value: item.id, text: `${item.name} (${item.id})` }));
             
-            populateReservationEquipmentDropdown(inventory, reserveCategory, startDate, endDate);
+            populateReservationEquipmentDropdown(currentData.inventory, reserveCategory, document.getElementById('startDate').value, document.getElementById('endDate').value);
+            
+            const selectedCheckinUser = document.getElementById('checkinUser').value;
+            if (selectedCheckinUser) {
+                const selectedCategory = document.getElementById('checkinCategoryFilter').value;
+                populateCheckinEquipmentDropdown(selectedCheckinUser, selectedCategory);
+            }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Form Submissions
             document.getElementById('checkoutForm').addEventListener('submit', handleCheckoutSubmit);
+            document.getElementById('checkinForm').addEventListener('submit', handleCheckinSubmit);
             document.getElementById('reservationForm').addEventListener('submit', handleReservationSubmit);
+            
+            // Reset Buttons
+            document.getElementById('newCheckoutBtn').addEventListener('click', resetCheckoutForm);
+            document.getElementById('newCheckinBtn').addEventListener('click', resetCheckinForm);
+            document.getElementById('cancelReservationBtn').addEventListener('click', handleCancelReservation);
+
+            // "Add to..." Buttons
             document.getElementById('addToReservationBtn').addEventListener('click', handleAddToReservation);
             document.getElementById('addToCheckoutBtn').addEventListener('click', handleAddToCheckout);
+            document.getElementById('addToCheckinBtn').addEventListener('click', handleAddToCheckin);
             
+            // Sub-navigation
             document.querySelectorAll('#reservation-mode-nav .sub-nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => switchReservationMode(btn.dataset.mode));
             });
+            document.getElementById('returnSingleBtn').addEventListener('click', () => {
+                document.getElementById('checkin-manual-section').classList.remove('hidden');
+                const user = document.getElementById('checkinUser').value;
+                populateCategoryFilter('checkinCategoryFilter', user);
+                updateAndRenderAll();
+            });
 
+            // Dropdown Change Handlers
             document.getElementById('reservationUser').addEventListener('change', (e) => {
                 if(reservationMode === 'update') {
                     populateExistingReservationsDropdown(e.target.value);
                 }
             });
+            
+            document.getElementById('checkoutUser').addEventListener('change', (e) => {
+                const selectedUser = e.target.value;
+                const reservationFields = document.getElementById('checkout-reservation-fields');
+                currentCheckoutItems = [];
+                if (selectedUser) {
+                    reservationFields.classList.remove('hidden');
+                    populateCheckoutReservationsDropdown(selectedUser);
+                } else {
+                    reservationFields.classList.add('hidden');
+                }
+                updateAndRenderAll();
+            });
+
+            document.getElementById('checkinUser').addEventListener('change', (e) => {
+                const selectedUser = e.target.value;
+                const optionsSection = document.getElementById('checkin-options-section');
+                currentCheckinItems = [];
+                if (selectedUser) {
+                    optionsSection.classList.remove('hidden');
+                    populateCheckinTicketDropdown(selectedUser);
+                } else {
+                    optionsSection.classList.add('hidden');
+                }
+                document.getElementById('checkin-manual-section').classList.add('hidden');
+                updateAndRenderAll();
+            });
+
+            document.getElementById('checkinTicketSelect').addEventListener('change', (e) => {
+                const value = e.target.value;
+                if (value) {
+                    const batchLogs = currentData.checkoutLog.filter(log => log.checkoutBatchId === value);
+                    batchLogs.forEach(log => {
+                        const alreadyAdded = currentCheckinItems.some(item => item.logId === log.logId);
+                        if (!alreadyAdded) {
+                            const itemDetails = currentData.inventory.find(i => i.id === log.equipmentId);
+                            if (itemDetails) {
+                                currentCheckinItems.push({
+                                    logId: log.logId,
+                                    id: itemDetails.id,
+                                    name: itemDetails.name
+                                });
+                            }
+                        }
+                    });
+                }
+                updateAndRenderAll();
+            });
+
+            document.getElementById('checkinCategoryFilter').addEventListener('change', () => updateAndRenderAll());
+            
+            document.getElementById('checkoutReservationSelect').addEventListener('change', (e) => {
+                const selectedBatchId = e.target.value;
+                currentCheckoutItems = [];
+                if (selectedBatchId) {
+                    const batchItems = currentData.reservations.filter(r => r.reservationBatchId === selectedBatchId);
+                    if (batchItems.length > 0) {
+                        document.getElementById('returnDate').value = batchItems[0].endDate;
+                        currentCheckoutItems = batchItems.map(resItem => currentData.inventory.find(invItem => invItem.id === resItem.equipmentId)).filter(Boolean);
+                    }
+                }
+                updateAndRenderAll();
+            });
 
             document.getElementById('existingReservationSelect').addEventListener('change', (e) => {
                 selectedReservationBatchId = e.target.value;
                 if (!selectedReservationBatchId) return;
-
-                const batchItems = reservations.filter(r => r.reservationBatchId === selectedReservationBatchId);
+                const batchItems = currentData.reservations.filter(r => r.reservationBatchId === selectedReservationBatchId);
                 if (batchItems.length > 0) {
                     document.getElementById('startDate').value = batchItems[0].startDate;
                     document.getElementById('endDate').value = batchItems[0].endDate;
                     document.getElementById('reservationUser').value = batchItems[0].name;
-                    currentReservationItems = batchItems.map(resItem => inventory.find(invItem => invItem.id === resItem.equipmentId));
+                    currentReservationItems = batchItems.map(resItem => currentData.inventory.find(invItem => invItem.id === resItem.equipmentId));
                     updateAndRenderAll();
                 }
             });
             
+            // Filter and Date Change Handlers
             document.getElementById('startDate').addEventListener('change', updateAndRenderAll);
             document.getElementById('endDate').addEventListener('change', updateAndRenderAll);
-
             document.getElementById('categoryFilter').addEventListener('change', updateAndRenderAll);
             document.getElementById('checkoutCategoryFilter').addEventListener('change', updateAndRenderAll);
             document.getElementById('reserveCategoryFilter').addEventListener('change', updateAndRenderAll);
             
+            // Set default dates
             const today = getTodayDateString();
-            document.getElementById('dueDate').min = today;
+            document.getElementById('returnDate').value = today;
+            document.getElementById('checkinDate').value = today;
+            document.getElementById('returnDate').min = today;
             document.getElementById('startDate').min = today;
             document.getElementById('endDate').min = today;
             document.getElementById('startDate').addEventListener('change', (e) => {
                  document.getElementById('endDate').min = e.target.value;
             });
 
+            // Main Navigation
             document.querySelectorAll('#main-nav .nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => switchView(btn.dataset.view));
             });
+
+            // Database Selectors
+            document.querySelectorAll('#location-selector .sub-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => setActiveDatabase(btn.dataset.location, currentType));
+            });
+            document.querySelectorAll('#type-selector .sub-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => setActiveDatabase(currentLocation, btn.dataset.type));
+            });
             
-            populateCategoryFilter('categoryFilter');
-            populateCategoryFilter('checkoutCategoryFilter');
-            populateCategoryFilter('reserveCategoryFilter');
-            populateUserDropdowns();
-            updateAndRenderAll();
+            // Initial Setup
+            setActiveDatabase('LA', 'Equipment');
+            switchView('reserve');
         });
 
     </script>
