@@ -204,6 +204,40 @@
         .view-outline-br {
             box-shadow: 0 0 0 4px #f59e0b; /* amber-500 */
         }
+        /* Calendar Styles */
+        .calendar-day {
+            background-color: #374151; /* gray-700 */
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            font-size: 0.875rem;
+        }
+        .calendar-day.other-month {
+            background-color: #1f2937; /* gray-800 */
+            color: #6b7280; /* gray-500 */
+        }
+        .calendar-day-number { font-weight: 600; margin-bottom: 0.25rem; }
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.25rem;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .event-reservation { background-color: #3b82f6; color: white; } /* blue-500 */
+        .event-checkout { background-color: #f59e0b; color: white; } /* amber-500 */
+        .calendar-day.is-today .calendar-day-number {
+            background-color: #4f46e5; color: white; border-radius: 9999px;
+            width: 1.75rem; height: 1.75rem;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 0.25rem;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 lg:p-8">
@@ -239,13 +273,13 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" /></svg>
                         Checkin
                     </button>
-                     <button class="nav-btn" data-view="inventory">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                        Inventory
-                    </button>
                      <button class="nav-btn" data-view="calendar">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18" /></svg>
                         Calendar
+                    </button>
+                     <button class="nav-btn" data-view="inventory">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                        Inventory
                     </button>
                      <button class="nav-btn" data-view="log">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
@@ -405,9 +439,19 @@
                             <h2 id="inventory-title" class="text-xl font-semibold">Equipment Inventory</h2>
                             <p class="text-sm text-gray-400 mt-1">Master list of all available gear.</p>
                         </div>
-                        <div>
-                             <label for="categoryFilter" class="sr-only">Filter by Category</label>
-                             <select id="categoryFilter" class="input-field text-sm"></select>
+                        <div class="flex items-center space-x-4">
+                             <div id="brandFilterContainer" class="hidden">
+                                <label for="brandFilter" class="sr-only">Filter by Brand</label>
+                                <select id="brandFilter" class="input-field text-sm"></select>
+                             </div>
+                             <div>
+                                <label for="categoryFilter" class="sr-only">Filter by Category</label>
+                                <select id="categoryFilter" class="input-field text-sm"></select>
+                             </div>
+                             <div>
+                                <label for="statusFilter" class="sr-only">Filter by Status</label>
+                                <select id="statusFilter" class="input-field text-sm"></select>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -417,6 +461,7 @@
                             <tr>
                                 <th class="table-header-cell">ID</th>
                                 <th class="table-header-cell">Item Name</th>
+                                <th id="brand-header-cell" class="table-header-cell hidden">Brand</th>
                                 <th class="table-header-cell">Category</th>
                                 <th class="table-header-cell">Health</th>
                                 <th class="table-header-cell">Status</th>
@@ -454,7 +499,17 @@
             
             <!-- Calendar View -->
             <div id="calendar-view" class="view card p-6">
-                 <h2 class="text-xl font-semibold">Reservation Calendar (Coming Soon)</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <button id="prev-month-btn" class="btn btn-secondary">&lt;</button>
+                    <h2 id="calendar-month-year" class="text-xl font-semibold"></h2>
+                    <button id="next-month-btn" class="btn btn-secondary">&gt;</button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-2 font-semibold">
+                    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+                    <!-- Calendar days will be generated here -->
+                </div>
             </div>
             
             <!-- Admin View -->
@@ -484,6 +539,7 @@
                         <select id="adminActionSelect" class="input-field mb-6">
                             <option value="manage">Manage Inventory</option>
                             <option value="add">Add Inventory</option>
+                            <option value="brands">Manage Brands</option>
                             <option value="categories">Manage Categories</option>
                         </select>
                     </div>
@@ -522,6 +578,10 @@
                              <div>
                                 <label for="newItemName" class="block text-sm font-medium">Item Name</label>
                                 <input type="text" id="newItemName" class="mt-1 input-field" required>
+                            </div>
+                            <div id="newItemBrandContainer" class="hidden">
+                                <label for="newItemBrandSelect" class="block text-sm font-medium">Brand</label>
+                                <select id="newItemBrandSelect" class="mt-1 input-field"></select>
                             </div>
                              <div>
                                 <label for="newItemCategorySelect" class="block text-sm font-medium">Category</label>
@@ -566,6 +626,30 @@
                         </div>
                     </div>
 
+                    <!-- Manage Brands Section -->
+                    <div id="admin-manage-brands-section" class="hidden space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 border-t pt-4 mt-4">Add New Brand</h3>
+                            <form id="addBrandForm" class="flex items-end gap-4">
+                                <div class="flex-grow">
+                                    <label for="newBrandName" class="block text-sm font-medium">New Brand Name</label>
+                                    <input type="text" id="newBrandName" class="mt-1 input-field" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary whitespace-nowrap">Add Brand</button>
+                            </form>
+                             <div id="addBrandMessage" class="text-sm mt-2"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 border-t pt-4 mt-4">Remove Existing Brand</h3>
+                             <div class="flex items-end gap-4">
+                                <div class="flex-grow">
+                                    <label for="removeBrandSelect" class="block text-sm font-medium">Select Brand to Remove</label>
+                                    <select id="removeBrandSelect" class="mt-1 input-field"></select>
+                                </div>
+                                <button id="removeBrandBtn" type="button" class="btn btn-danger whitespace-nowrap">Remove Brand</button>
+                            </div>
+                        </div>
+                    </div>
                  </div>
             </div>
         </main>
@@ -579,6 +663,27 @@
             <div class="flex justify-center gap-4">
                 <button id="cancelDeleteBtn" class="btn btn-secondary w-24">Cancel</button>
                 <button id="confirmDeleteBtn" class="btn btn-danger w-24">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div id="eventDetailModal" class="modal-overlay hidden">
+        <div class="modal-content text-left max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="eventModalTitle" class="text-lg font-semibold text-white">Event Details</h3>
+                <button id="closeEventModalBtn" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <p><strong class="text-gray-400 w-24 inline-block">For:</strong> <span id="eventModalUser"></span></p>
+                <p><strong class="text-gray-400 w-24 inline-block">From:</strong> <span id="eventModalStartDate"></span></p>
+                <p><strong class="text-gray-400 w-24 inline-block">To:</strong> <span id="eventModalEndDate"></span></p>
+                <div>
+                    <strong class="text-gray-400 block mb-2">Items:</strong>
+                    <ul id="eventModalItemList" class="list-disc list-inside bg-gray-900 p-3 rounded-md space-y-1">
+                        <!-- Items will be populated here -->
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -606,10 +711,11 @@
                 },
                 Products: {
                     inventory: [
-                        { id: 'PROD-01', name: 'T-Shirt', category: 'Apparel', health: 'Good' },
-                        { id: 'PROD-02', name: 'Mug', category: 'Merchandise', health: 'Good' },
+                        { id: 'PROD-01', name: 'T-Shirt', category: 'Apparel', health: 'Good', brand: 'BrandA' },
+                        { id: 'PROD-02', name: 'Mug', category: 'Merchandise', health: 'Good', brand: 'BrandB' },
                     ],
                     categories: ['Apparel', 'Merchandise'],
+                    brands: ['BrandA', 'BrandB'],
                     checkoutLog: [],
                     reservations: [],
                     users: ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
@@ -637,6 +743,7 @@
                 Products: {
                     inventory: [],
                     categories: [],
+                    brands: [],
                     checkoutLog: [],
                     reservations: [],
                     users: ['Frank', 'Grace'],
@@ -662,9 +769,10 @@
                 },
                 Products: {
                     inventory: [
-                        { id: 'PROD-03', name: 'Sticker Pack', category: 'Merchandise', health: 'Good' },
+                        { id: 'PROD-03', name: 'Sticker Pack', category: 'Merchandise', health: 'Good', brand: 'BrandA' },
                     ],
                     categories: ['Merchandise'],
+                    brands: ['BrandA'],
                     checkoutLog: [],
                     reservations: [],
                     users: ['Heidi', 'Ivan'],
@@ -689,6 +797,7 @@
         // Admin State
         let isAdminLoggedIn = false;
         let itemToDelete = { id: null, type: null }; // type can be 'item' or 'category'
+        let calendarDate = new Date();
 
 
         // --- UTILITY FUNCTIONS ---
@@ -759,14 +868,173 @@
         };
 
         // --- RENDER FUNCTIONS ---
-        const renderInventory = (inventoryWithStatus, filterCategory = 'All') => {
+        const renderCalendar = () => {
+            if (!document.getElementById('calendar-view').classList.contains('active')) {
+                return; // Don't render if not visible
+            }
+
+            calendarDate.setDate(1); // Start from the first day of the month
+
+            const month = calendarDate.getMonth();
+            const year = calendarDate.getFullYear();
+
+            document.getElementById('calendar-month-year').textContent = `${calendarDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const lastDayOfPrevMonth = new Date(year, month, 0);
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            const daysInMonth = lastDayOfMonth.getDate();
+            const startDayOfWeek = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
+            const prevMonthDays = lastDayOfPrevMonth.getDate();
+
+            // Add days from previous month
+            for (let i = startDayOfWeek; i > 0; i--) {
+                const day = prevMonthDays - i + 1;
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day other-month';
+                dayEl.innerHTML = `<span class="calendar-day-number">${day}</span>`;
+                grid.appendChild(dayEl);
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Add days of the current month
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                const currentDate = new Date(year, month, i);
+
+                if (currentDate.getTime() === today.getTime()) {
+                    dayEl.classList.add('is-today');
+                }
+
+                let eventsHtml = '';
+                const processedBatches = new Set(); // Avoids duplicating event divs for the same batch
+                
+                // Check for reservations
+                (currentData.reservations || []).forEach(res => {
+                    const startDate = new Date(res.startDate + 'T00:00:00');
+                    const endDate = new Date(res.endDate + 'T00:00:00');
+                    if (currentDate >= startDate && currentDate <= endDate) {
+                        const batchId = `res-${res.reservationBatchId}`;
+                        if (!processedBatches.has(batchId)) {
+                            const batchItems = currentData.reservations.filter(r => r.reservationBatchId === res.reservationBatchId);
+                            const title = `Reservation for ${res.name} (${batchItems.length} items)`;
+                            eventsHtml += `<div class="calendar-event event-reservation cursor-pointer" 
+                                                title="${title}"
+                                                data-event-type="reservation" 
+                                                data-batch-id="${res.reservationBatchId}">
+                                                R: ${res.name}
+                                           </div>`;
+                            processedBatches.add(batchId);
+                        }
+                    }
+                });
+
+                // Check for checkouts
+                (currentData.checkoutLog || []).forEach(log => {
+                    if (log.dateReturned === '') { // Only show active checkouts
+                        const startDate = new Date(log.dateOut + 'T00:00:00');
+                        const endDate = new Date(log.dueDate + 'T00:00:00');
+                        if (currentDate >= startDate && currentDate <= endDate) {
+                            const batchId = `co-${log.checkoutBatchId}`;
+                            if (!processedBatches.has(batchId)) {
+                                const batchItems = currentData.checkoutLog.filter(l => l.checkoutBatchId === log.checkoutBatchId && !l.dateReturned);
+                                const title = `Checkout for ${log.name} (${batchItems.length} items)`;
+                                eventsHtml += `<div class="calendar-event event-checkout cursor-pointer" 
+                                                    title="${title}"
+                                                    data-event-type="checkout" 
+                                                    data-batch-id="${log.checkoutBatchId}">
+                                                    C: ${log.name}
+                                               </div>`;
+                                processedBatches.add(batchId);
+                            }
+                        }
+                    }
+                });
+
+                dayEl.innerHTML = `<div class="calendar-day-number">${i}</div><div class="space-y-1 w-full">${eventsHtml}</div>`;
+                grid.appendChild(dayEl);
+            }
+
+            // Add days from next month
+            const totalDaysRendered = startDayOfWeek + daysInMonth;
+            const nextMonthDays = (7 - (totalDaysRendered % 7)) % 7;
+            for (let i = 1; i <= nextMonthDays; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day other-month';
+                dayEl.innerHTML = `<span class="calendar-day-number">${i}</span>`;
+                grid.appendChild(dayEl);
+            }
+        };
+
+        const showEventModal = (type, batchId) => {
+            const modal = document.getElementById('eventDetailModal');
+            const titleEl = document.getElementById('eventModalTitle');
+            const userEl = document.getElementById('eventModalUser');
+            const startEl = document.getElementById('eventModalStartDate');
+            const endEl = document.getElementById('eventModalEndDate');
+            const itemListEl = document.getElementById('eventModalItemList');
+
+            itemListEl.innerHTML = ''; // Clear previous items
+
+            if (type === 'reservation') {
+                const batchItems = currentData.reservations.filter(r => r.reservationBatchId == batchId);
+                if (batchItems.length === 0) return;
+
+                const firstItem = batchItems[0];
+                titleEl.textContent = 'Reservation Details';
+                userEl.textContent = firstItem.name;
+                startEl.textContent = formatDate(firstItem.startDate);
+                endEl.textContent = formatDate(firstItem.endDate);
+
+                batchItems.forEach(resItem => {
+                    const itemDetails = currentData.inventory.find(inv => inv.id === resItem.equipmentId);
+                    const li = document.createElement('li');
+                    li.textContent = itemDetails ? `${itemDetails.name} (${itemDetails.id})` : `Item ID: ${resItem.equipmentId}`;
+                    itemListEl.appendChild(li);
+                });
+
+            } else if (type === 'checkout') {
+                const batchItems = currentData.checkoutLog.filter(l => l.checkoutBatchId == batchId);
+                if (batchItems.length === 0) return;
+
+                const firstItem = batchItems[0];
+                titleEl.textContent = 'Checkout Details';
+                userEl.textContent = firstItem.name;
+                startEl.textContent = formatDate(firstItem.dateOut);
+                endEl.textContent = `Due ${formatDate(firstItem.dueDate)}`;
+
+                batchItems.forEach(logItem => {
+                    const itemDetails = currentData.inventory.find(inv => inv.id === logItem.equipmentId);
+                    const li = document.createElement('li');
+                    li.textContent = itemDetails ? `${itemDetails.name} (${itemDetails.id})` : `Item ID: ${logItem.equipmentId}`;
+                    itemListEl.appendChild(li);
+                });
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        const renderInventory = (inventoryWithStatus, filterCategory = 'All', filterStatus = 'All', filterBrand = 'All') => {
             const tableBody = document.getElementById('inventoryTableBody');
             tableBody.innerHTML = '';
 
-            const filteredInventory = inventoryWithStatus.filter(item => filterCategory === 'All' || item.category === filterCategory);
+            const filteredInventory = inventoryWithStatus.filter(item => {
+                const categoryMatch = filterCategory === 'All' || item.category === filterCategory;
+                const statusMatch = filterStatus === 'All' || item.status === filterStatus;
+                const brandMatch = currentType !== 'Products' || filterBrand === 'All' || item.brand === filterBrand;
+                return categoryMatch && statusMatch && brandMatch;
+            });
 
             if (filteredInventory.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" class="table-cell text-center text-gray-500">No items found.</td></tr>`;
+                const colspan = currentType === 'Products' ? 8 : 7;
+                tableBody.innerHTML = `<tr><td colspan="${colspan}" class="table-cell text-center text-gray-500">No items found.</td></tr>`;
                 return;
             }
 
@@ -778,12 +1046,14 @@
                     'Needs Repair': 'health-needs-repair',
                     'Out for Repair': 'health-out-for-repair'
                 }[item.health];
+                const brandCell = currentType === 'Products' ? `<td class="table-cell">${item.brand || ''}</td>` : '';
                 const dueDateLabel = item.status === 'Reserved' ? `Starts ${formatDate(item.dueDate)}` : formatDate(item.dueDate);
 
                 const row = `
                     <tr>
                         <td class="table-cell font-mono text-xs">${item.id}</td>
                         <td class="table-cell font-medium">${item.name}</td>
+                        ${brandCell}
                         <td class="table-cell">${item.category}</td>
                         <td class="table-cell health-cell cursor-pointer" data-id="${item.id}" data-health="${item.health}"><span class="health-badge ${healthClass}">${item.health}</span></td>
                         <td class="table-cell inventory-status-cell cursor-pointer" data-id="${item.id}" data-status="${item.status}"><span class="status-badge ${statusClass}">${item.status}</span></td>
@@ -1021,6 +1291,81 @@
             }
         };
 
+        const populateBrandFilter = () => {
+            const container = document.getElementById('brandFilterContainer');
+            if (currentType !== 'Products') {
+                container.classList.add('hidden');
+                return;
+            }
+            container.classList.remove('hidden');
+
+            const select = document.getElementById('brandFilter');
+            const currentValue = select.value;
+            select.innerHTML = '';
+
+            const allOption = document.createElement('option');
+            allOption.value = 'All';
+            allOption.textContent = 'All Brands';
+            select.appendChild(allOption);
+
+            const brands = currentData.brands || [];
+            brands.sort().forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                select.appendChild(option);
+            });
+
+            if (currentValue) {
+                select.value = currentValue;
+            }
+        };
+
+        const populateBrandSelect = (selectId, includeAll = true) => {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            const currentValue = select.value;
+            select.innerHTML = '';
+
+            if (includeAll) {
+                select.innerHTML += `<option value="All">All Brands</option>`;
+            } else {
+                const placeholder = document.createElement('option');
+                placeholder.value = "";
+                placeholder.textContent = "Select Brand";
+                placeholder.disabled = true;
+                placeholder.selected = true;
+                select.appendChild(placeholder);
+            }
+
+            (currentData.brands || []).sort().forEach(brand => {
+                select.innerHTML += `<option value="${brand}">${brand}</option>`;
+            });
+            if (currentValue) select.value = currentValue;
+        };
+
+        const populateStatusFilter = () => {
+            const select = document.getElementById('statusFilter');
+            const currentValue = select.value;
+            select.innerHTML = '';
+
+            const allOption = document.createElement('option');
+            allOption.value = 'All';
+            allOption.textContent = 'All Statuses';
+            select.appendChild(allOption);
+
+            const statuses = ['Available', 'Checked Out', 'Overdue', 'Reserved', 'Missing'];
+            statuses.forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = status;
+                select.appendChild(option);
+            });
+
+            if (currentValue) {
+                select.value = currentValue;
+            }
+        };
 
         const populateUserDropdowns = () => {
             populateDropdown('checkoutUser', currentData.users, () => true, user => ({ value: user, text: user }));
@@ -1380,6 +1725,12 @@
                 }
             }
 
+            // Render calendar if it's the active view
+            if (viewName === 'calendar') {
+                calendarDate = new Date();
+                renderCalendar();
+            }
+
             // Reset forms when switching to them
             if (viewName === 'checkin') {
                 resetCheckinForm();
@@ -1434,14 +1785,30 @@
             document.querySelector('#reserve-view h2').textContent = `Reserve ${type}`;
             document.querySelector('#checkout-view h2').textContent = `Log a New Checkout`;
             document.querySelector('#checkin-view h2').textContent = `Check-in ${type}`;
+
+            const isProducts = type === 'Products';
+            document.getElementById('brand-header-cell').classList.toggle('hidden', !isProducts);
+            document.getElementById('brandFilterContainer').classList.toggle('hidden', !isProducts);
+            document.getElementById('newItemBrandContainer').classList.toggle('hidden', !isProducts);
             
-            const actionButtons = ['reserve', 'checkout', 'checkin'];
+            const actionButtons = ['reserve', 'checkout', 'checkin', 'calendar'];
             const shouldBeDisabled = type === 'Equipment';
 
             actionButtons.forEach(viewName => {
                 document.querySelector(`.nav-btn[data-view="${viewName}"]`).disabled = shouldBeDisabled;
             });
 
+            // Show/hide admin options based on type
+            const adminBrandOption = document.querySelector('#adminActionSelect option[value="brands"]');
+            if (adminBrandOption) {
+                adminBrandOption.style.display = isProducts ? '' : 'none';
+                // If the hidden option was selected, switch to default
+                if (!isProducts && document.getElementById('adminActionSelect').value === 'brands') {
+                    document.getElementById('adminActionSelect').value = 'manage';
+                    switchAdminView('manage');
+                }
+            }
+            
             // If the current view is now disabled, switch to a safe default like 'inventory'.
             const currentActiveView = document.querySelector('#main-nav .nav-btn.active')?.dataset.view;
             if (shouldBeDisabled && actionButtons.includes(currentActiveView)) {
@@ -1453,9 +1820,13 @@
             resetCheckinForm();
             resetReservationForm();
             populateUserDropdowns();
+            populateBrandFilter();
+            populateBrandFilter();
             populateCategoryFilter('categoryFilter');
+            populateStatusFilter();
             populateCategoryFilter('checkoutCategoryFilter');
             populateCategoryFilter('reserveCategoryFilter');
+            populateBrandSelect('removeBrandSelect', false);
             populateCategoryFilter('removeCategorySelect', false);
             populateCategoryFilter('newItemCategorySelect', false);
             updateAndRenderAll();
@@ -1521,6 +1892,19 @@
                 // Remove all items within that category
                 currentData.inventory = currentData.inventory.filter(item => item.category !== itemToDelete.id);
             }
+            else if (itemToDelete.type === 'brand') {
+                // Remove the brand itself
+                const brandIndex = currentData.brands.indexOf(itemToDelete.id);
+                if (brandIndex > -1) {
+                    currentData.brands.splice(brandIndex, 1);
+                }
+                // Remove brand from all items that have it
+                currentData.inventory.forEach(item => {
+                    if (item.brand === itemToDelete.id) {
+                        item.brand = '';
+                    }
+                });
+            }
 
             // Close the modal and reset state
             document.getElementById('deleteConfirmModal').classList.add('hidden');
@@ -1537,6 +1921,7 @@
             const name = form.newItemName.value;
             const category = form.newItemCategorySelect.value;
             const health = form.newItemHealth.value;
+            const brand = form.newItemBrandSelect.value;
             const messageDiv = document.getElementById('addInventoryMessage');
 
             if (!id || !name || !category || !health) {
@@ -1545,7 +1930,11 @@
                 return;
             }
 
-            currentData.inventory.push({ id, name, category, health });
+            const newItem = { id, name, category, health };
+            if (currentType === 'Products' && brand) {
+                newItem.brand = brand;
+            }
+            currentData.inventory.push(newItem);
             
             messageDiv.textContent = 'Item added successfully!';
             messageDiv.className = 'text-green-400 text-sm mt-2';
@@ -1588,10 +1977,40 @@
             updateAndRenderAll();
         };
 
+        const handleAddBrand = (event) => {
+            event.preventDefault();
+            const input = document.getElementById('newBrandName');
+            const brandName = input.value.trim();
+            const messageDiv = document.getElementById('addBrandMessage');
+
+            if (!brandName) {
+                messageDiv.textContent = 'Brand name cannot be empty.';
+                messageDiv.className = 'text-red-400 text-sm mt-2';
+                return;
+            }
+            if (currentData.brands.includes(brandName)) {
+                 messageDiv.textContent = 'Brand already exists.';
+                messageDiv.className = 'text-red-400 text-sm mt-2';
+                return;
+            }
+
+            currentData.brands.push(brandName);
+            messageDiv.textContent = 'Brand added successfully!';
+            messageDiv.className = 'text-green-400 text-sm mt-2';
+            input.value = '';
+
+            setTimeout(() => {
+                messageDiv.textContent = '';
+            }, 2000);
+
+            updateAndRenderAll();
+        };
+
         const switchAdminView = (view) => {
             document.getElementById('admin-manage-remove-section').classList.add('hidden');
             document.getElementById('admin-add-inventory-section').classList.add('hidden');
             document.getElementById('admin-manage-categories-section').classList.add('hidden');
+            document.getElementById('admin-manage-brands-section').classList.add('hidden');
             
             if (view === 'manage') {
                 document.getElementById('admin-manage-remove-section').classList.remove('hidden');
@@ -1599,27 +2018,35 @@
                 document.getElementById('admin-add-inventory-section').classList.remove('hidden');
             } else if (view === 'categories') {
                 document.getElementById('admin-manage-categories-section').classList.remove('hidden');
+            } else if (view === 'brands') {
+                document.getElementById('admin-manage-brands-section').classList.remove('hidden');
             }
         };
-
 
         // --- INITIALIZATION ---
         const updateAndRenderAll = () => {
             const inventoryWithStatus = calculateInventoryStatus();
             const invCategory = document.getElementById('categoryFilter').value || 'All';
+            const invStatus = document.getElementById('statusFilter').value || 'All';
+            const invBrand = document.getElementById('brandFilter').value || 'All';
             const checkoutCategory = document.getElementById('checkoutCategoryFilter').value || 'All';
             const reserveCategory = document.getElementById('reserveCategoryFilter').value || 'All';
             
-            renderInventory(inventoryWithStatus, invCategory);
+            renderInventory(inventoryWithStatus, invCategory, invStatus, invBrand);
             renderLog();
             renderReservationList();
             renderCheckoutList();
             renderCheckinList();
+            renderCalendar();
             
+            populateBrandFilter();
             populateCategoryFilter('categoryFilter');
+            populateStatusFilter();
             populateCategoryFilter('checkoutCategoryFilter');
             populateCategoryFilter('reserveCategoryFilter');
+            populateBrandSelect('removeBrandSelect', false);
             populateCategoryFilter('removeCategorySelect', false);
+            populateBrandSelect('newItemBrandSelect', false);
             populateCategoryFilter('newItemCategorySelect', false);
 
             if (isAdminLoggedIn) {
@@ -1649,6 +2076,36 @@
             document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
             document.getElementById('addInventoryForm').addEventListener('submit', handleAddInventory);
             document.getElementById('addCategoryForm').addEventListener('submit', handleAddCategory);
+            document.getElementById('addBrandForm').addEventListener('submit', handleAddBrand);
+
+            // Calendar Buttons
+            document.getElementById('prev-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                renderCalendar();
+            });
+            document.getElementById('next-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Event Modal Listeners
+            document.getElementById('calendar-grid').addEventListener('click', (event) => {
+                const eventEl = event.target.closest('.calendar-event');
+                if (eventEl) {
+                    const eventType = eventEl.dataset.eventType;
+                    const batchId = eventEl.dataset.batchId;
+                    showEventModal(eventType, batchId);
+                }
+            });
+            document.getElementById('closeEventModalBtn').addEventListener('click', () => {
+                document.getElementById('eventDetailModal').classList.add('hidden');
+            });
+            document.getElementById('eventDetailModal').addEventListener('click', (event) => {
+                // Close if clicking on the overlay itself
+                if (event.target.id === 'eventDetailModal') {
+                    document.getElementById('eventDetailModal').classList.add('hidden');
+                }
+            });
 
 
             // Admin Buttons & Search
@@ -1764,6 +2221,8 @@
             document.getElementById('startDate').addEventListener('change', updateAndRenderAll);
             document.getElementById('endDate').addEventListener('change', updateAndRenderAll);
             document.getElementById('categoryFilter').addEventListener('change', updateAndRenderAll);
+            document.getElementById('brandFilter').addEventListener('change', updateAndRenderAll);
+            document.getElementById('statusFilter').addEventListener('change', updateAndRenderAll);
             document.getElementById('checkoutCategoryFilter').addEventListener('change', updateAndRenderAll);
             document.getElementById('reserveCategoryFilter').addEventListener('change', updateAndRenderAll);
             
@@ -1981,6 +2440,15 @@
                     document.getElementById('deleteConfirmModal').classList.remove('hidden');
                 }
             });
+            document.getElementById('removeBrandBtn').addEventListener('click', () => {
+                const brandToRemove = document.getElementById('removeBrandSelect').value;
+                if (brandToRemove) {
+                    itemToDelete = { id: brandToRemove, type: 'brand' };
+                    document.getElementById('deleteModalTitle').textContent = 'Delete Brand?';
+                    document.getElementById('deleteModalText').textContent = `This will permanently delete the brand "${itemToDelete.id}" and remove it from all associated items. This action cannot be undone.`;
+                    document.getElementById('deleteConfirmModal').classList.remove('hidden');
+                }
+            });
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
                 itemToDelete = { id: null, type: null };
                 document.getElementById('deleteConfirmModal').classList.add('hidden');
@@ -1993,5 +2461,7 @@
         });
 
     </script>
+
+    <div class="fixed bottom-4 right-4 text-xs text-gray-500">vP.0.3</div>
 </body>
 </html>
